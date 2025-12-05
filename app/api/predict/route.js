@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { spawn } from "child_process";
 import { join } from "path";
+import { platform } from "os";
 
 export async function POST(req) {
   try {
@@ -17,8 +18,11 @@ export async function POST(req) {
     // Get the absolute path to the Python script
     const scriptPath = join(process.cwd(), "python", "predict.py");
 
+    // Use 'python' on Windows, 'python3' on Unix systems
+    const pythonCommand = platform() === "win32" ? "python" : "python3";
+
     return new Promise((resolve) => {
-      const py = spawn("python3", [scriptPath]);
+      const py = spawn(pythonCommand, [scriptPath]);
       let output = "";
       let errorOutput = "";
 
